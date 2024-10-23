@@ -56,3 +56,16 @@ func mergeFlags(m map[string]string, f flagSet) map[string]interface{} {
 	}
 	return o
 }
+
+// mergeFlags combines a set of key-value settings with any type implementing
+// the flagSet interface.
+func mergeFlagsAny(m map[string]any, f flagSet) map[string]interface{} {
+	o := make(map[string]interface{})
+	for k, v := range m {
+		o[k] = v
+	}
+	for k, v := range f.flags() {
+		o[k] = v
+	}
+	return o
+}

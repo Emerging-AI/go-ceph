@@ -13,6 +13,7 @@ type subVolumeGroupFields struct {
 	Gid        int    `json:"gid,omitempty"`
 	Mode       string `json:"mode,omitempty"`
 	PoolLayout string `json:"pool_layout,omitempty"`
+	Size       int    `json:"size,omitempty"`
 }
 
 // SubVolumeGroupOptions are used to specify optional, non-identifying, values
@@ -22,6 +23,7 @@ type SubVolumeGroupOptions struct {
 	Gid        int
 	Mode       int
 	PoolLayout string
+	Size       int
 }
 
 func (s *SubVolumeGroupOptions) toFields(v, g string) *subVolumeGroupFields {
@@ -34,6 +36,7 @@ func (s *SubVolumeGroupOptions) toFields(v, g string) *subVolumeGroupFields {
 		Gid:        s.Gid,
 		Mode:       modeString(s.Mode, false),
 		PoolLayout: s.PoolLayout,
+		Size:       s.Size,
 	}
 }
 
@@ -41,7 +44,8 @@ func (s *SubVolumeGroupOptions) toFields(v, g string) *subVolumeGroupFields {
 //
 // Similar To:
 //
-//	ceph fs subvolumegroup create <volume> <group_name>  ...
+//		ceph fs subvolumegroup create <volume> <group_name>  ...
+//	 quincy: ceph fs subvolumegroup create <vol_name> <group_name> [<size:int>] [<pool_layout>] [<uid:int>] [<gid:int>] [<mode>]
 func (fsa *FSAdmin) CreateSubVolumeGroup(volume, name string, o *SubVolumeGroupOptions) error {
 	if o == nil {
 		o = &SubVolumeGroupOptions{}
