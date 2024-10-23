@@ -280,6 +280,25 @@ func (fsa *FSAdmin) SubVolumeInfo(volume, group, name string) (*SubVolumeInfo, e
 	return parseSubVolumeInfo(fsa.marshalMgrCommand(m))
 }
 
+// FetchSubVolumeInfo returns information about the specified subvolume.
+// same as SubVolumeInfo, keep the function naming consistent.
+//
+// Similar To:
+//
+//	ceph fs subvolume info <volume> --group-name=<group> <name>
+func (fsa *FSAdmin) FetchSubVolumeInfo(volume, group, name string) (*SubVolumeInfo, error) {
+	m := map[string]string{
+		"prefix":   "fs subvolume info",
+		"vol_name": volume,
+		"sub_name": name,
+		"format":   "json",
+	}
+	if group != NoGroup {
+		m["group_name"] = group
+	}
+	return parseSubVolumeInfo(fsa.marshalMgrCommand(m))
+}
+
 // CreateSubVolumeSnapshot creates a new snapshot from the source subvolume.
 //
 // Similar To:
