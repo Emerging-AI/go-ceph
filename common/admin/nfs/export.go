@@ -136,7 +136,7 @@ func parseExportInfo(res commands.Response) (ExportInfo, error) {
 //
 // Similar To:
 //
-//	ceph nfs export create cephfs
+//	ceph nfs export create cephfs <cluster_id> <pseudo_path> <fsname> [<path>] [--readonly] [--client_addr <value>...] [--squash <value>] [--sectype <value>...]
 func (nfsa *Admin) CreateCephFSExport(spec CephFSExportSpec) (
 	*ExportResult, error) {
 	// ---
@@ -196,6 +196,22 @@ func (nfsa *Admin) ListDetailedExports(clusterID string) ([]ExportInfo, error) {
 //
 //	ceph nfs export info
 func (nfsa *Admin) ExportInfo(clusterID, pseudoPath string) (ExportInfo, error) {
+	m := map[string]string{
+		"prefix":      "nfs export info",
+		"format":      "json",
+		"cluster_id":  clusterID,
+		"pseudo_path": pseudoPath,
+	}
+	return parseExportInfo(commands.MarshalMgrCommand(nfsa.conn, m))
+}
+
+// FetchExportInfo will return a structure describing the export specified by it's
+// pseudo-path.
+//
+// Similar To:
+//
+//	ceph nfs export info <cluster_id> <pseudo_path>
+func (nfsa *Admin) FetchExportInfo(clusterID, pseudoPath string) (ExportInfo, error) {
 	m := map[string]string{
 		"prefix":      "nfs export info",
 		"format":      "json",
